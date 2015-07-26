@@ -19,7 +19,6 @@ The resulting tidy data set is stored in a data frame called `data_summary`.
 
 ### Requirements
 This script requires the following packages to work:
-* `sqldf`
 * `dplyr`
 
 

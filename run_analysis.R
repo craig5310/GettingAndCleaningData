@@ -7,7 +7,6 @@
 ## source mean() and std() variables, grouped by Subject and Activity
 
 ## Required R Packages
-require(sqldf)
 require(dplyr)
 
 ## Get the data, if the data has not already been downloaded
@@ -60,12 +59,10 @@ x_test$activity_name <- y_test$activity_name
 combined_data <- rbind(x_train, x_test)
 
 ## Extract only the mean, standard deviation, subject_ID and activity_name
-columns <- sqldf("select * from features 
-                 where [feature_name] like '%mean()%'
-                 or [feature_name] like '%std()%'
-                 ")
 
-filterColumns <- c(columns$index, 562, 563)
+columns <- grep("mean\\(\\)|std\\(\\)",features$feature_name)
+
+filterColumns <- c(columns, 562, 563)
 
 subset_data <- combined_data[,filterColumns]
 
@@ -75,3 +72,6 @@ data_summary <- subset_data %>%
         group_by(subject_id, activity_name) %>%
         summarise_each(funs(mean), 1:64)
 
+names(data_summary) <- gsub("\\.mean\\.\\.","_Mean",names(data_summary))
+names(data_summary) <- gsub("\\.std\\.\\.","_Std",names(data_summary))
+names(data_summary) <- gsub("\\.","_",names(data_summary))
